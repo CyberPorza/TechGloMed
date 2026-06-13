@@ -1,0 +1,59 @@
+# =============================================================================
+# TechGloMed — Docker Compose Production Overrides
+#
+# Use with: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+#
+# Differences from base compose:
+#   - API uses the 'production' build stage (no source volumes)
+#   - No Adminer or Redis Commander
+#   - Resource limits enforced
+#   - Restart policy: always
+# =============================================================================
+
+version: '3.9'
+
+services:
+  api:
+    build:
+      target: production
+    command: node dist/main
+    restart: always
+    volumes: []             # no source code mounts in prod
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '5'
+
+  postgres:
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+
+  redis:
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  # Disable dev tools in production
+  adminer:
+    profiles:
+      - disabled
+
+  redis-commander:
+    profiles:
+      - disabled

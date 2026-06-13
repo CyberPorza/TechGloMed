@@ -1,0 +1,35 @@
+# Dependencies (installed inside container)
+node_modules/
+
+# Build output (rebuilt inside container)
+dist/
+
+# Secrets — never copy into image
+.env
+.env.*
+!.env.example
+
+# Dev/Test files
+**/*.spec.ts
+**/*.test.ts
+test/
+coverage/
+
+# Editor and OS artifacts
+.vscode/
+.idea/
+.DS_Store
+*.log
+
+# Git
+.git/
+.gitignore
+
+# Docker files themselves (avoid circular inclusion)
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Documentation
+docs/
+README.md
